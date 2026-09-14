@@ -1,0 +1,107 @@
+{
+    "write_folder":"/home/ihuarte/Escritorio/Ivan/NNs/Irreps/Figures/",
+
+    "calc_irreps": null,
+
+    "basis_builder": {
+        "mode": "dense",
+
+        "dense_setup":{},
+        "action_setup":{
+            "k_max": 30
+        },
+        "orbit_setup":{}
+    },
+
+    "symmetries":{
+        
+        "Traslation":{
+            "on": true,
+            "subgroup":[0, 1]
+        },
+
+        "Z2":{
+            "on": true
+        },
+
+        "Cn":{
+            "on": false,
+            "n": 2
+        },
+
+        "Refl_H":{
+            "on": false
+        },
+        "Refl_V":{
+            "on": false
+        },
+        "Refl_D":{
+            "on": false
+        },
+        "Refl_AD":{
+            "on": false
+        }
+    },
+
+    "config_cm": {
+
+        "mode": "zip",
+        
+        "sizes":[[4, 2], [4, 3]],
+
+        "kwargs_lattice" : {
+            "bc":"periodic",
+            "order": "default_2"
+        },
+
+        "S_operators": false,
+
+        "CM": {
+            "selection": "J1J2Square",
+
+            "Oxalate":{
+                "strength": 0.2,
+                "theta_list":[9.0,  45.0,  54.0,   68.0,  80.0,      45.0, 75.0,  85.0, 90.0, 90.0, 135.0, 135.0],
+                "phi_list":[  0.0,  15.0,  135.0,  300.0,  115.2,    80.0,  0.0,  20.0,  0.0, 90.0, 180.0,  0.0]
+            },
+
+            "LRChain":{
+                "J_list": [-6.0, -5.5, -5.0, -4.5, -4.0, -3.5, 
+                            -3.0, -2.5, -2.0, -1.5, -1.0, -0.5,
+                            0.0, 0.5, 1.0, 1.5, 2.0, 2.5, 
+                            3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 
+                            6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0 ],
+                "alpha_list": [2.5],
+                "fields": [1.0, 0.0],
+                "ops": [["Y","Z"],["ZZ"]]
+            },
+
+            "IsingSquare":{
+                "J_list": [ 
+                    -0.6, 0.6
+                ],
+                "fields": [-1.0],
+                "ops": [["X"],["ZZ"]]
+            },
+
+            "LRSquare":{
+                "J_list": [-6.0, -2.0, 0.0],
+                "alpha_list": [2.5],
+                "fields": [1.0, 0.0],
+                "ops": [["Y","Z"],["ZZ"]]
+            },
+
+            "J1J2Square":{
+                "J1": 1.0,
+                "J2_list": [
+                    0.5, 0.0, 1.0
+                
+            ],
+                "fields": [0.0,0.0,0.0]
+            }
+        }
+        
+
+    }
+
+}
