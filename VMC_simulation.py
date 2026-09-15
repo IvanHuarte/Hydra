@@ -17,12 +17,8 @@ print("Ranks:", jax.process_count())
 print("Devices:", jax.devices())
 print("Devices:", jax.device_count())
 
-# Añadir los directorios necesarios
 
-from VA_project.engine.runners import Runner
-
-# Importar módulos necesarios
-from VA_project.initialize_model import ModelFactory
+from CouplingModel.initialize_model import ModelFactory
 
 from NN_module.callback import Callback
 from NN_module.callback.utils import dump_callback
@@ -138,8 +134,7 @@ for i, size in enumerate(sizes):
 
         ## Update Hamiltonian
         cm_model = model_factory.get_model()
-        eng = Runner(cm_model.cm, S_operators=False)
-        H = eng.build_hamiltonian(hi)
+        H = cm_model.build_hamiltonian(hi)
 
         (
             (E_gr_global, x_ED_global),
