@@ -171,15 +171,13 @@ for i, size in enumerate(sizes):
         sampler_factory = SamplerFactory(sampler_setup, cm_model=cm_model)
         sampler = sampler_factory.get_sampler(hi)
 
-        #### INITIALIZE LOGGER ####
+        #### INITIALIZE LOGGER ####     (netket.vmc issues, colects metrics through all the simulation)
         log = nk.logging.RuntimeLog()
-        # If instead of this logging you insert a string, it will be used as output prefix for a JSON file where the evolution of the energy at each epoch will be stored.
 
         #### INITIALIZE VSTATE ####
         print("Initializing Variational State...")
         seed = int(time.time())
         key = jax.random.key(seed)
-        # key = jnp.array([0, 1773936479], dtype=jnp.uint32)
         vstate = nk.vqs.MCState(
             sampler=sampler,
             model=model,
@@ -190,7 +188,7 @@ for i, size in enumerate(sizes):
         )
         print("Variational state initialized.")
 
-        ## Transplant loaded parameters to the current architecture
+        ## Transplant loaded parameters to the current architecture if 
         if hydra.load_model:
             vstate = hydra.load_vstate(vstate)
         code2path = hydra.get_code2path(vstate.parameters)
