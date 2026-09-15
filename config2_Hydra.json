@@ -20,7 +20,7 @@
                 "Sequivariant": {
                     "CvT":{},
                     "ComplexHead":{},
-                    "irrep": [0,0]                    
+                    "irrep": [0,1]                    
                 }
             },
             "load": [
