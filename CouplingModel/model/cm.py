@@ -60,7 +60,7 @@ class CouplingModel:
     def postprocess(self, S_operators):
 
         preprocess = preprocess_energy_inputs(
-            self.cm.operators, self.cm.onsite_terms, self.cm.coupling_terms, S_operators
+            self.operators, self.onsite_terms, self.coupling_terms, S_operators
         )
 
         (
@@ -73,7 +73,7 @@ class CouplingModel:
     def build_hamiltonian(self, hilbert=None):
 
         if hilbert is None:
-            hilbert = nk.hilbert.Spin(s=0.5, N=self.cm.lattice.Q)
+            hilbert = nk.hilbert.Spin(s=0.5, N=self.lattice.Q)
         H = 0.0 * nk.operator.spin.sigmay(hilbert, 0)
 
         spin_ops = {
@@ -82,23 +82,23 @@ class CouplingModel:
             "Z": nk.operator.spin.sigmaz,
         }
 
-        for o, op in enumerate(self.cm.operators[0]):
+        for o, op in enumerate(self.operators[0]):
 
             sigma = spin_ops[op]
 
-            for i in range(self.cm.lattice.Q):
+            for i in range(self.lattice.Q):
 
-                H += self.cm.onsite_terms[o][i] * sigma(hilbert, i)
+                H += self.onsite_terms[o][i] * sigma(hilbert, i)
 
-        for o, op in enumerate(self.cm.operators[1]):
+        for o, op in enumerate(self.operators[1]):
 
             sigma_i = spin_ops[op[0]]
             sigma_j = spin_ops[op[1]]
 
-            for i in range(self.cm.lattice.Q):
-                for j in range(i + 1, self.cm.lattice.Q):
+            for i in range(self.lattice.Q):
+                for j in range(i + 1, self.lattice.Q):
 
-                    H += self.cm.coupling_terms[o, i, j] * (
+                    H += self.coupling_terms[o, i, j] * (
                         sigma_i(hilbert, i) @ sigma_j(hilbert, j)
                     )
 
