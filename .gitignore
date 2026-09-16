@@ -49,3 +49,5 @@ uv.lock
 !config3_Hydra_NN.json
 
 !refinement.json
+
+!OutputFiles_example/

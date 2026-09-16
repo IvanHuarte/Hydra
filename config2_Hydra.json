@@ -87,22 +87,32 @@
         }
     },
 
-    "CvT":{
+    "CNN_CNN+MLP":{
 
          "stage0": {
             "template":{
+                "CNN":{}
+            },
 
-                "SingleModule": {
-                    "CvT":{},
-                    "mode":"modulus"
+            "load": [],
+            "save_params": true
+        },
+
+         "stage1": {
+            "template":{
+                "Sequential":{
+                    "MLP":{},
+                    "CNN":{}
                 }
             },
 
             "load": [
-                ["stageX0", "0", "0"]
+                ["stageX0", "0", "1"]
             ],
             "save_params": true
-        }
+        }  
+
+    
     }
 
 }

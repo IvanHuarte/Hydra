@@ -1,4 +1,4 @@
-#!/home/ihuarte/Escritorio/Ivan/NNs/.venv/bin/python
+#!/home/ihuarte/Escritorio/Ivan/Hydra/.venv/bin/python
 import argparse
 import json
 import time
@@ -18,8 +18,6 @@ print("Devices:", jax.devices())
 print("Devices:", jax.device_count())
 
 
-from CouplingModel.initialize_model import ModelFactory
-
 from NN_module.callback import Callback
 from NN_module.callback.utils import dump_callback
 from NN_module.exact_diagonalization import calc_exact_diag
@@ -37,6 +35,8 @@ from NN_module.schedule.schedule import Schedule
 from NN_module.schedule.utils import get_schedule_label
 from NN_module.utils import print_tree, save_config_files
 from NN_module.VMC import VMCBuilder
+
+from CouplingModel.initialize_model import ModelFactory
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -134,7 +134,7 @@ for i, size in enumerate(sizes):
 
         ## Update Hamiltonian
         cm_model = model_factory.get_model()
-        H = cm_model.build_hamiltonian(hi)
+        H = cm_model.cm.build_hamiltonian(hi)
 
         (
             (E_gr_global, x_ED_global),
@@ -188,7 +188,7 @@ for i, size in enumerate(sizes):
         )
         print("Variational state initialized.")
 
-        ## Transplant loaded parameters to the current architecture if 
+        ## Transplant loaded parameters to the current architecture if
         if hydra.load_model:
             vstate = hydra.load_vstate(vstate)
         code2path = hydra.get_code2path(vstate.parameters)
