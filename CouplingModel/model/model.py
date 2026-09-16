@@ -1,7 +1,7 @@
 import numpy as np
 
-from ..lattice.lattice import Chain, Triangular, Square
-from .cm import IsingGeneral, LongRangeModel, AnisotropicModel, HeisenbergXYZ
+from ..lattice.lattice import Chain, Square, Triangular
+from .cm import AnisotropicModel, HeisenbergXYZ, IsingGeneral, LongRangeModel
 
 
 class Oxalate:

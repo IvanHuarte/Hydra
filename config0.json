@@ -2,7 +2,7 @@
 
     "write_folder_sim":"/home/ihuarte/Escritorio/Ivan/NNs/Simulations_irreps/CvT/J1J2Square/8x8/",
 
-    "sz_total": 0,
+    "sz_total": null,
 
     "callback":{
         "keeper": true,
@@ -51,7 +51,7 @@
 
     "sampler":{
         "sampler":{
-            "rules": ["Exchange"],
+            "rules": ["LocalRule","Exchange"],
             "prules": [0.7, 0.3],
             "initial_state": "hilbert"
         },

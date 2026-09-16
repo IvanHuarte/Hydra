@@ -134,7 +134,6 @@ for i, size in enumerate(sizes):
 
         ## Update Hamiltonian
         cm_model = model_factory.get_model()
-        print(cm_model.__dir__())
         H = cm_model.cm.build_hamiltonian(hi)
 
         (
