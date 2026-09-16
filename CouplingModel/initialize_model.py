@@ -1,6 +1,6 @@
 from itertools import product
-import VA_project.model
-from VA_project.model import REGISTRED_MODELS
+
+from .model import REGISTRED_MODELS
 
 
 class ModelFactory:

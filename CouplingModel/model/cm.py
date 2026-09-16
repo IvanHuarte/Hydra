@@ -4,7 +4,7 @@ import netket as nk
 import numpy as np
 from scipy.sparse.linalg import eigsh
 
-from .utils import preprocess_energy_inputs
+from ..utils import preprocess_energy_inputs
 
 
 class CouplingModel:
@@ -57,20 +57,17 @@ class CouplingModel:
         self.onsite_terms = np.zeros((N_ons, M))
         self.coupling_terms = np.zeros((N_coup, M, M))
 
-        if "S_operators" in kwargs:
-            S_operators = kwargs["S_operators"]
-        else:
-            S_operators = True
+    def postprocess(self, S_operators):
 
         preprocess = preprocess_energy_inputs(
             self.cm.operators, self.cm.onsite_terms, self.cm.coupling_terms, S_operators
         )
 
         (
-            self.cm.onsite_terms,
-            self.cm.coupling_terms,
-            self.cm.onsite_func_idx,
-            self.cm.coupling_func_idx,
+            self.onsite_terms,
+            self.coupling_terms,
+            self.onsite_func_idx,
+            self.coupling_func_idx,
         ) = preprocess
 
     def build_hamiltonian(self, hilbert=None):
@@ -281,7 +278,12 @@ class CouplingModel:
 class IsingGeneral(CouplingModel):
 
     def __init__(
-        self, lattice, J, fields=[0.0, 0.0, 0.0], ops=[["X", "Y", "Z"], ["ZZ"]]
+        self,
+        lattice,
+        J,
+        fields=[0.0, 0.0, 0.0],
+        ops=[["X", "Y", "Z"], ["ZZ"]],
+        **kwargs,
     ):
 
         _shape_control(fields, J, ops)
@@ -291,6 +293,9 @@ class IsingGeneral(CouplingModel):
         self._initialize_onsite_terms(fields)
 
         self.add_couplings_from_pairs(J, ops[1][0], "NN", complementary=True)
+
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
 
 
 class LongRangeModel(CouplingModel):
@@ -304,6 +309,7 @@ class LongRangeModel(CouplingModel):
         alpha,
         ops=[["X", "Z"], ["ZZ"]],
         norm_mode="min_norm",
+        **kwargs,
     ):
 
         _shape_control(fields, hoppings, ops)
@@ -324,7 +330,10 @@ class LongRangeModel(CouplingModel):
                 hoppings[i], alpha, distances, norm_mode
             )
 
-    def normalization(self, distances, alpha, mode):
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
+
+    def normalization(self, distances, alpha, mode, **kwargs):
 
         if self.lattice.bc == "open":
 
@@ -364,7 +373,7 @@ class LongRangeModel(CouplingModel):
 
         return norm
 
-    def long_range_couplings(self, J, alpha, distances, norm_mode):
+    def long_range_couplings(self, J, alpha, distances, norm_mode, **kwargs):
 
         warnings.filterwarnings("ignore")
         J_matrix = np.where(distances != 0, J * distances ** (-alpha), 0.0)
@@ -381,7 +390,7 @@ class IsingChainXZ(CouplingModel):
     con acoplos ZZ a primeros vecinos
     """
 
-    def __init__(self, lattice, fields, hopping):
+    def __init__(self, lattice, fields, hopping, **kwargs):
 
         ops = [["X", "Z"], ["ZZ"]]
         _shape_control(fields, hopping, ops)
@@ -391,6 +400,9 @@ class IsingChainXZ(CouplingModel):
         self._initialize_onsite_terms(fields)
 
         self.add_couplings_from_pairs(hopping, "ZZ", "NN", complementary=True)
+
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
 
 
 class GeneralNeighborCoupling(CouplingModel):
@@ -405,7 +417,7 @@ class GeneralNeighborCoupling(CouplingModel):
 
     """
 
-    def __init__(self, lattice, fields, couplings):
+    def __init__(self, lattice, fields, couplings, **kwargs):
 
         fields = [field for field in fields if field[0] != 0]
         couplings = [coupling for coupling in couplings if coupling[0] != 0]
@@ -421,11 +433,19 @@ class GeneralNeighborCoupling(CouplingModel):
         for strength, op, neigh in couplings:
             self.add_couplings_from_pairs(strength, op, neigh, complementary=True)
 
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
+
 
 class HeisenbergXYZ(CouplingModel):
 
     def __init__(
-        self, lattice, hoppings, fields, ops=[["X", "Y", "Z"], ["XX", "YY", "ZZ"]]
+        self,
+        lattice,
+        hoppings,
+        fields,
+        ops=[["X", "Y", "Z"], ["XX", "YY", "ZZ"]],
+        **kwargs,
     ):
 
         _shape_control(fields, hoppings, ops)
@@ -440,10 +460,13 @@ class HeisenbergXYZ(CouplingModel):
 
                 self.add_couplings_from_pairs(J, op, pair, complementary=True)
 
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
+
 
 class JKGammaModel(CouplingModel):
 
-    def __init__(self, lattice, couplings, direction_ops, field=[[], []]):
+    def __init__(self, lattice, couplings, direction_ops, field=[[], []], **kwargs):
 
         coupling_ops = ["XX", "XY", "XZ", "YX", "YY", "YZ", "ZX", "ZY", "ZZ"]
 
@@ -483,11 +506,15 @@ class JKGammaModel(CouplingModel):
                     self.add_couplings_from_dx(
                         Gamma, gamma_op, pair, dx_idx, complementary=True
                     )
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
 
 
 class AnisotropicModel(CouplingModel):
 
-    def __init__(self, lattice, coupling_operators, couplings, field=[[], []]):
+    def __init__(
+        self, lattice, coupling_operators, couplings, field=[[], []], **kwargs
+    ):
 
         unraveled_ops = [
             op
@@ -514,6 +541,8 @@ class AnisotropicModel(CouplingModel):
                     self.add_couplings_from_dx(
                         strength, op, pair, dx_idx, complementary=True
                     )
+        if "S_operators" in kwargs:
+            self.postprocess(kwargs["S_operators"])
 
     def _anisotropic_shape_control(self, couplings, coupling_operators, field):
 
