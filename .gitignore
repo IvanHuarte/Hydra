@@ -49,5 +49,7 @@ uv.lock
 !config3_Hydra_NN.json
 
 !refinement.json
+!pyproject.toml
+!uv.lock
 
 !OutputFiles_example/
